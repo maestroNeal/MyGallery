@@ -8,8 +8,7 @@
 import Combine
 import Foundation
 
-/// Holds the gallery's data and state. The view only reads these values
-/// and calls these functions; it never talks to the network itself.
+
 @MainActor
 final class GalleryViewModel: ObservableObject {
     @Published private(set) var images: [GalleryImage] = []
@@ -27,8 +26,6 @@ final class GalleryViewModel: ObservableObject {
         !isLoading && errorMessage == nil && images.isEmpty && !hasMorePages
     }
 
-    /// Called when the screen appears. Does nothing if images are already loaded,
-    /// so coming back from the detail screen keeps the same list and scroll position.
     func loadFirstPageIfNeeded() async {
         guard images.isEmpty, !isLoading else { return }
         await loadFirstPage()
@@ -49,8 +46,6 @@ final class GalleryViewModel: ObservableObject {
         }
     }
 
-    /// Called when a card appears. Starts loading the next page when the user
-    /// is close to the bottom of the list.
     func loadMoreIfNeeded(currentImage: GalleryImage) async {
         guard let index = images.firstIndex(of: currentImage),
               index >= images.count - 4 else { return }
@@ -58,7 +53,7 @@ final class GalleryViewModel: ObservableObject {
     }
 
     func loadNextPage() async {
-        // These checks stop duplicate requests while one is already running.
+        // checks stop duplicate requests while one is already running.
         guard !isLoading, !isLoadingMore, hasMorePages, !images.isEmpty else { return }
 
         isLoadingMore = true

@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-/// One card in the grid. The image is always square and the author is one line,
-/// so every card has exactly the same height.
 struct GalleryGridItemView: View {
     let image: GalleryImage
 

@@ -13,8 +13,8 @@ nonisolated struct GalleryImage: Identifiable, Hashable, Codable {
     let author: String
     let width: Int
     let height: Int
-    let url: String          // Picsum page for the photo
-    let downloadURL: String  // Full-size original image
+    let url: String
+    let downloadURL: String
 
     enum CodingKeys: String, CodingKey {
         case id, author, width, height, url

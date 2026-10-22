@@ -8,15 +8,7 @@
 import SwiftUI
 import Combine
 
-@MainActor
-protocol AuthenticationServiceProtocol {
-    func signIn() async throws -> AuthUser
-    func restorePreviousSignIn() async -> AuthUser?
-    func signOut() async throws
-    func handle(url: URL) -> Bool
-}
 
-/// Single source of truth for authentication state.
 @MainActor
 final class AuthViewModel: ObservableObject {
     @Published private(set) var user: AuthUser?

@@ -11,7 +11,6 @@ struct GalleryView: View {
     @StateObject private var viewModel = GalleryViewModel()
     let onLogout: () -> Void
 
-    // Two equal columns on iPhone, three on the wider iPad screen.
     private var columns: [GridItem] {
         let count = DeviceLayout.isPad ? 3 : 2
         return Array(repeating: GridItem(.flexible(), spacing: 12), count: count)
