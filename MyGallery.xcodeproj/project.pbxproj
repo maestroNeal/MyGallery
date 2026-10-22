@@ -6,13 +6,33 @@
 	objectVersion = 110;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		B7B0FEE0308A047A0055900E /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = B7B0FEDF308A047A0055900E /* FirebaseAuth */; };
+		B7B0FEE2308A047A0055900E /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = B7B0FEE1308A047A0055900E /* FirebaseCore */; };
+		B7B0FF0B308A08780055900E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B7B0FF0A308A08780055900E /* GoogleService-Info.plist */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		B7343B7E3089696900D79825 /* MyGallery.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyGallery.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B7B0FF0A308A08780055900E /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		B7B0FF09308A07D70055900E /* Exceptions for "MyGallery" folder in "MyGallery" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = B7343B7D3089696900D79825 /* MyGallery */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		B7343B803089696900D79825 /* MyGallery */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				B7B0FF09308A07D70055900E /* Exceptions for "MyGallery" folder in "MyGallery" target */,
+			);
 			path = MyGallery;
 			sourceTree = "<group>";
 		};
@@ -22,6 +42,8 @@
 		B7343B7B3089696900D79825 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
+				B7B0FEE2308A047A0055900E /* FirebaseCore in Frameworks */,
+				B7B0FEE0308A047A0055900E /* FirebaseAuth in Frameworks */,
 			);
 		};
 /* End PBXFrameworksBuildPhase section */
@@ -31,6 +53,7 @@
 			isa = PBXGroup;
 			children = (
 				B7343B803089696900D79825 /* MyGallery */,
+				B7B0FF0A308A08780055900E /* GoogleService-Info.plist */,
 				B7343B7F3089696900D79825 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -60,6 +83,10 @@
 				B7343B803089696900D79825 /* MyGallery */,
 			);
 			name = MyGallery;
+			packageProductDependencies = (
+				B7B0FEDF308A047A0055900E /* FirebaseAuth */,
+				B7B0FEE1308A047A0055900E /* FirebaseCore */,
+			);
 			productName = MyGallery;
 			productReference = B7343B7E3089696900D79825 /* MyGallery.app */;
 			productType = "com.apple.product-type.application";
@@ -89,7 +116,8 @@
 			mainGroup = B7343B753089696800D79825;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				B7B0FE97308A02F30055900E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				B7B0FEDE308A047A0055900E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				B7B0FEE4308A066E0055900E /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B7343B7F3089696900D79825 /* Products */;
@@ -105,6 +133,7 @@
 		B7343B7C3089696900D79825 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			files = (
+				B7B0FF0B308A08780055900E /* GoogleService-Info.plist in Resources */,
 			);
 		};
 /* End PBXResourcesBuildPhase section */
@@ -246,6 +275,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MyGallery/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -282,6 +312,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MyGallery/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -331,7 +362,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		B7B0FE97308A02F30055900E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+		B7B0FEDE308A047A0055900E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
 			requirement = {
@@ -339,7 +370,28 @@
 				minimumVersion = 13.1.0;
 			};
 		};
+		B7B0FEE4308A066E0055900E /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 10.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		B7B0FEDF308A047A0055900E /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B7B0FEDE308A047A0055900E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		B7B0FEE1308A047A0055900E /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B7B0FEDE308A047A0055900E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = B7343B763089696800D79825 /* Project object */;
 	validationLevel = 1;
