@@ -8,7 +8,7 @@
 import Foundation
 
 /// One photo from the Picsum API (https://picsum.photos/v2/list).
-nonisolated struct GalleryImage: Identifiable, Hashable, Codable {
+struct GalleryImage: Identifiable, Hashable, Codable {
     let id: String
     let author: String
     let width: Int

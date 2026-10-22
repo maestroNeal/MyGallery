@@ -5,7 +5,7 @@
 
 import Foundation
 
-nonisolated struct AuthUser: Equatable, Codable {
+struct AuthUser: Equatable, Codable {
     let id: String
     let name: String
     let email: String

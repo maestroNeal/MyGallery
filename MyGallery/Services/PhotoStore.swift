@@ -7,6 +7,7 @@
 
 import CoreData
 
+@MainActor
 final class PhotoStore {
     private let context: NSManagedObjectContext
 
@@ -15,7 +16,6 @@ final class PhotoStore {
     }
 
     // MARK: - Photo details
-
     func savePhotos(_ images: [GalleryImage], page: Int) {
         for (position, image) in images.enumerated() {
             let photo = findPhoto(id: image.id) ?? Photo(context: context)
@@ -41,7 +41,6 @@ final class PhotoStore {
     }
 
     // MARK: - Image bytes
-    /// Returns the saved image bytes, or nil if this photo was never downloaded.
     func imageData(photoID: String) -> Data? {
         findPhoto(id: photoID)?.imageData
     }
@@ -59,7 +58,6 @@ final class PhotoStore {
         return try? context.fetch(request).first
     }
 
-    /// Deletes every saved photo (details and image bytes). Used on logout.
     func deleteAllPhotos() {
         let request = NSFetchRequest<Photo>(entityName: "Photo")
         let photos = (try? context.fetch(request)) ?? []

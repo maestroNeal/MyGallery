@@ -9,6 +9,7 @@ import CoreData
 
 /// Sets up the Core Data database.
 /// The model file (MyGallery.xcdatamodeld) has one entity: `Photo`.
+@MainActor
 struct PersistenceController {
     static let shared = PersistenceController()
 

@@ -15,6 +15,10 @@ struct MyGalleryApp: App {
         authenticationService: GoogleAuthService()
     )
 
+    init() {
+        NetworkMonitor.shared.startMonitoring()
+    }
+
     var body: some Scene {
         WindowGroup {
             RootView(viewModel: authViewModel)
