@@ -2,35 +2,20 @@
 //  ImageService.swift
 //  MyGallery
 //
+//  Created by Rahul Gangwar on 22/10/26.
+//
 
 import Foundation
 import UIKit
 
-enum ImageServiceError: LocalizedError {
-    case badURL
-    case badServerResponse
-    case invalidImageData
 
-    var errorDescription: String? {
-        switch self {
-        case .badURL: return "The image address is not valid."
-        case .badServerResponse: return "The server returned an error. Please try again."
-        case .invalidImageData: return "The downloaded file is not a valid image."
-        }
-    }
-}
-
-/// All network work for the gallery. Everything downloaded is saved in
-/// Core Data (through PhotoStore) so it can be shown later without internet.
 final class ImageService {
     static let shared = ImageService()
 
     private let photoStore = PhotoStore()
 
-    /// Images already turned into UIImage, kept in memory for smooth scrolling.
     private let memoryCache = NSCache<NSString, UIImage>()
 
-    /// Downloads currently in progress, so two views asking for the same image share one download.
     private var downloadsInProgress: [String: Task<UIImage, Error>] = [:]
 
     // MARK: - Photo list

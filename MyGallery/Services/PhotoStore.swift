@@ -2,15 +2,11 @@
 //  PhotoStore.swift
 //  MyGallery
 //
+//  Created by Rahul Gangwar on 22/10/26.
+//
 
 import CoreData
 
-/// Saves and reads photos in Core Data, so the gallery works without internet.
-///
-/// Each `Photo` row stores:
-/// - the photo details from the API (id, author, size, URLs)
-/// - which page it came from and its position in that page (to keep the order)
-/// - the downloaded image bytes (thumbnail for the grid, larger image for the detail screen)
 final class PhotoStore {
     private let context: NSManagedObjectContext
 
@@ -20,8 +16,6 @@ final class PhotoStore {
 
     // MARK: - Photo details
 
-    /// Saves one page of photos. Photos that already exist are updated, not duplicated,
-    /// and their saved image bytes are kept.
     func savePhotos(_ images: [GalleryImage], page: Int) {
         for (position, image) in images.enumerated() {
             let photo = findPhoto(id: image.id) ?? Photo(context: context)
@@ -37,7 +31,6 @@ final class PhotoStore {
         saveChanges()
     }
 
-    /// Returns the saved photos of one page, in the same order as the API.
     func loadPhotos(page: Int) -> [GalleryImage] {
         let request = NSFetchRequest<Photo>(entityName: "Photo")
         request.predicate = NSPredicate(format: "page == %d", page)
@@ -48,7 +41,6 @@ final class PhotoStore {
     }
 
     // MARK: - Image bytes
-
     func imageData(photoID: String, size: ImageSize) -> Data? {
         guard let photo = findPhoto(id: photoID) else { return nil }
         switch size {
@@ -66,8 +58,6 @@ final class PhotoStore {
         saveChanges()
     }
 
-    // MARK: - Helpers
-
     private func findPhoto(id: String) -> Photo? {
         let request = NSFetchRequest<Photo>(entityName: "Photo")
         request.predicate = NSPredicate(format: "photoID == %@", id)
@@ -80,7 +70,6 @@ final class PhotoStore {
         do {
             try context.save()
         } catch {
-            // Saving is only for offline use; the app keeps working if it fails.
             context.rollback()
             print("Could not save photos: \(error)")
         }
@@ -88,7 +77,7 @@ final class PhotoStore {
 }
 
 private extension Photo {
-    /// Converts a Core Data row back into the model the screens use.
+    // Converts a Core Data row back into the model 
     func toGalleryImage() -> GalleryImage? {
         guard let photoID else { return nil }
         return GalleryImage(
