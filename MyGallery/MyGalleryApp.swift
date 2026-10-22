@@ -33,16 +33,23 @@ struct RootView: View {
         Group {
             if viewModel.isRestoring {
                 ProgressView()
-            } else if let user = viewModel.user {
-                ProfileView(user: user, onSignOut: viewModel.signOut)
+            } else if viewModel.isAuthenticated {
+                GalleryView(onLogout: {
+                    Task { await viewModel.signOut() }
+                })
             } else {
                 LoginView(
                     isLoading: viewModel.isLoading,
                     errorMessage: viewModel.errorMessage,
-                    onGoogleSignIn: viewModel.signIn
+                    onGoogleSignIn: {
+                        Task { await viewModel.signIn() }
+                    }
                 )
             }
         }
-        .task { await viewModel.restoreSession() }
+        .animation(.default, value: viewModel.isAuthenticated)
+        .task {
+            await viewModel.restoreSession()
+        }
     }
 }

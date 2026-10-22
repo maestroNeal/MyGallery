@@ -44,6 +44,7 @@ struct GoogleSignInButton: View {
         .buttonStyle(.plain)
         .disabled(isLoading)
         .accessibilityLabel("Sign in with Google")
+        .accessibilityIdentifier("googleSignInButton")
         .accessibilityHint("Signs you in to your wallpaper gallery")
     }
 }
