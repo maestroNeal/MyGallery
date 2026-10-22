@@ -18,6 +18,21 @@ final class ImageService {
 
     private var downloadsInProgress: [String: Task<UIImage, Error>] = [:]
 
+    // MARK: - Clear data
+
+    /// Removes everything saved on the device for the gallery. Called on logout.
+    func clearAllData() {
+        // Stop downloads that are still running so they don't save anything afterwards.
+        for download in downloadsInProgress.values {
+            download.cancel()
+        }
+        downloadsInProgress.removeAll()
+
+        memoryCache.removeAllObjects()                 // images in memory
+        photoStore.deleteAllPhotos()                   // photos saved in Core Data
+        URLCache.shared.removeAllCachedResponses()     // URLSession's own HTTP cache
+    }
+
     // MARK: - Photo list
 
     func fetchImages(page: Int, limit: Int) async throws -> [GalleryImage] {
@@ -42,8 +57,10 @@ final class ImageService {
 
     // MARK: - Image files
 
-    func loadImage(for image: GalleryImage, size: ImageSize) async throws -> UIImage {
-        let key = "\(image.id)-\(size.rawValue)"
+    /// Returns the photo's image. The network is used ONLY if the image is not
+    /// already in memory or saved in Core Data.
+    func loadImage(for image: GalleryImage) async throws -> UIImage {
+        let key = image.id
 
         // 1. Already in memory?
         if let cachedImage = memoryCache.object(forKey: key as NSString) {
@@ -51,7 +68,7 @@ final class ImageService {
         }
 
         // 2. Saved in the database? Use it, no network needed.
-        if let savedData = photoStore.imageData(photoID: image.id, size: size),
+        if let savedData = photoStore.imageData(photoID: image.id),
            let savedImage = UIImage(data: savedData) {
             memoryCache.setObject(savedImage, forKey: key as NSString)
             return savedImage
@@ -63,7 +80,7 @@ final class ImageService {
         }
 
         // 4. Download it, save it in the database, and return it.
-        guard let url = image.imageURL(for: size) else {
+        guard let url = image.imageURL else {
             throw ImageServiceError.badURL
         }
 
@@ -72,7 +89,7 @@ final class ImageService {
             guard let downloadedImage = UIImage(data: data) else {
                 throw ImageServiceError.invalidImageData
             }
-            photoStore.saveImageData(data, photoID: image.id, size: size)
+            photoStore.saveImageData(data, photoID: image.id)
             memoryCache.setObject(downloadedImage, forKey: key as NSString)
             return downloadedImage
         }

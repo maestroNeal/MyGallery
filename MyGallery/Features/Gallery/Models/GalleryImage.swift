@@ -27,22 +27,12 @@ nonisolated struct GalleryImage: Identifiable, Hashable, Codable {
         return CGFloat(width) / CGFloat(height)
     }
 
-    /// The address to download this photo at the given size.
-    /// We use smaller versions instead of the original (which can be 5000px wide).
-    func imageURL(for size: ImageSize) -> URL? {
-        switch size {
-        case .thumbnail:
-            return URL(string: "https://picsum.photos/id/\(id)/400/400")
-        case .detail:
-            let detailWidth = 1200
-            let detailHeight = max(1, Int(CGFloat(detailWidth) / aspectRatio))
-            return URL(string: "https://picsum.photos/id/\(id)/\(detailWidth)/\(detailHeight)")
-        }
+    /// The one image we download for this photo, used by both the grid and the
+    /// detail screen. It keeps the original aspect ratio but is much smaller
+    /// than the original file (which can be 5000px wide).
+    var imageURL: URL? {
+        let imageWidth = 1000
+        let imageHeight = max(1, Int(CGFloat(imageWidth) / aspectRatio))
+        return URL(string: "https://picsum.photos/id/\(id)/\(imageWidth)/\(imageHeight)")
     }
-}
-
-/// Which version of a photo we need.
-nonisolated enum ImageSize: String {
-    case thumbnail   // square image for the grid
-    case detail      // larger image for the detail screen
 }

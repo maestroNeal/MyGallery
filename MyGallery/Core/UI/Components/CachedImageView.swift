@@ -10,7 +10,6 @@ import UIKit
 /// Shows a spinner while loading and a Retry button if loading fails.
 struct CachedImageView: View {
     let image: GalleryImage
-    let size: ImageSize
     var contentMode: ContentMode = .fill
 
     @State private var loadedImage: UIImage?
@@ -46,7 +45,7 @@ struct CachedImageView: View {
         guard loadedImage == nil else { return }
         didFail = false
         do {
-            loadedImage = try await ImageService.shared.loadImage(for: image, size: size)
+            loadedImage = try await ImageService.shared.loadImage(for: image)
         } catch {
             // If the view scrolled off screen the task is cancelled; that's not a real failure.
             if !Task.isCancelled {

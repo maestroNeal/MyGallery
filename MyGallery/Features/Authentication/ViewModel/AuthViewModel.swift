@@ -81,7 +81,8 @@ final class AuthViewModel: ObservableObject {
         } catch {
             // Local UI state is still cleared so the user is never stuck signed in.
         }
-        sessionStore.clear()
+        sessionStore.clear()                 // saved user in UserDefaults
+        ImageService.shared.clearAllData()   // saved photos and images
         user = nil
         errorMessage = nil
     }

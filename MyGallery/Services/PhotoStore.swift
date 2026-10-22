@@ -41,20 +41,14 @@ final class PhotoStore {
     }
 
     // MARK: - Image bytes
-    func imageData(photoID: String, size: ImageSize) -> Data? {
-        guard let photo = findPhoto(id: photoID) else { return nil }
-        switch size {
-        case .thumbnail: return photo.thumbnailData
-        case .detail: return photo.detailImageData
-        }
+    /// Returns the saved image bytes, or nil if this photo was never downloaded.
+    func imageData(photoID: String) -> Data? {
+        findPhoto(id: photoID)?.imageData
     }
 
-    func saveImageData(_ data: Data, photoID: String, size: ImageSize) {
+    func saveImageData(_ data: Data, photoID: String) {
         guard let photo = findPhoto(id: photoID) else { return }
-        switch size {
-        case .thumbnail: photo.thumbnailData = data
-        case .detail: photo.detailImageData = data
-        }
+        photo.imageData = data
         saveChanges()
     }
 
@@ -63,6 +57,16 @@ final class PhotoStore {
         request.predicate = NSPredicate(format: "photoID == %@", id)
         request.fetchLimit = 1
         return try? context.fetch(request).first
+    }
+
+    /// Deletes every saved photo (details and image bytes). Used on logout.
+    func deleteAllPhotos() {
+        let request = NSFetchRequest<Photo>(entityName: "Photo")
+        let photos = (try? context.fetch(request)) ?? []
+        for photo in photos {
+            context.delete(photo)
+        }
+        saveChanges()
     }
 
     private func saveChanges() {

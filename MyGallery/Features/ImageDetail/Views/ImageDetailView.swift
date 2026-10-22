@@ -16,7 +16,7 @@ struct ImageDetailView: View {
                 Color.clear
                     .aspectRatio(image.aspectRatio, contentMode: .fit)
                     .overlay {
-                        CachedImageView(image: image, size: .detail, contentMode: .fit)
+                        CachedImageView(image: image, contentMode: .fit)
                     }
                     .clipShape(RoundedRectangle(cornerRadius: 16))
                     .accessibilityLabel("Photo by \(image.author)")
@@ -32,13 +32,6 @@ struct ImageDetailView: View {
                 }
                 .padding(.horizontal, 16)
                 .background(AppColors.cardBackground, in: RoundedRectangle(cornerRadius: 14))
-
-                if let pageURL = URL(string: image.url) {
-                    Link(destination: pageURL) {
-                        Label("Open photo page", systemImage: "safari")
-                            .font(.subheadline)
-                    }
-                }
             }
             .padding(16)
         }

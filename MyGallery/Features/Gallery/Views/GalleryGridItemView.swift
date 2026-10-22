@@ -17,7 +17,7 @@ struct GalleryGridItemView: View {
             Color.clear
                 .aspectRatio(1, contentMode: .fit)
                 .overlay {
-                    CachedImageView(image: image, size: .thumbnail, contentMode: .fill)
+                    CachedImageView(image: image, contentMode: .fill)
                 }
                 .clipShape(RoundedRectangle(cornerRadius: 12))
 
