@@ -13,47 +13,66 @@ import UIKit
 final class GoogleAuthService: AuthenticationServiceProtocol {
 
     init() {
-        // GIDSignIn reads GIDClientID from Info.plist automatically;
-        // set it explicitly too so a missing key fails with a clear error.
         if let clientID = Bundle.main.object(forInfoDictionaryKey: "GIDClientID") as? String,
            !clientID.isEmpty {
             GIDSignIn.sharedInstance.configuration = GIDConfiguration(clientID: clientID)
+            print("Configured")
+        } else {
+            print("ERROR: GIDClientID is missing")
         }
     }
 
     func signIn() async throws -> AuthUser {
+        print("Starting sign-in")
         guard GIDSignIn.sharedInstance.configuration != nil else {
+            print("ERROR: not configured")
             throw GoogleAuthError.missingClientID
         }
         guard let presenter = UIApplication.shared.topViewController else {
+            print("ERROR: no screen found to show the Google sign-in sheet")
             throw GoogleAuthError.noPresentingViewController
         }
 
+        print("Showing Google account picker")
         return try await withCheckedThrowingContinuation { continuation in
             GIDSignIn.sharedInstance.signIn(withPresenting: presenter) { result, error in
                 if let error {
                     let nsError = error as NSError
                     if nsError.domain == kGIDSignInErrorDomain,
                        nsError.code == GIDSignInError.canceled.rawValue {
+                        print("User cancelled sign-in")
                         continuation.resume(throwing: GoogleAuthError.cancelled)
                     } else {
+                        print("Sign-in failed: \(error.localizedDescription)")
                         continuation.resume(throwing: error)
                     }
                     return
                 }
                 guard let user = result?.user else {
+                    print("Sign-in failed: Google returned no user")
                     continuation.resume(throwing: GoogleAuthError.noUser)
                     return
                 }
-                continuation.resume(returning: Self.makeUser(from: user))
+                let signedInUser = Self.makeUser(from: user)
+                print("Sign-in successful: \(signedInUser.name) (\(signedInUser.email))")
+                continuation.resume(returning: signedInUser)
             }
         }
     }
 
     func restorePreviousSignIn() async -> AuthUser? {
-        guard GIDSignIn.sharedInstance.hasPreviousSignIn() else { return nil }
+        guard GIDSignIn.sharedInstance.hasPreviousSignIn() else {
+            print("No previous Google session to restore")
+            return nil
+        }
+        print("Restoring previous Google session")
         return await withCheckedContinuation { continuation in
-            GIDSignIn.sharedInstance.restorePreviousSignIn { user, _ in
+            GIDSignIn.sharedInstance.restorePreviousSignIn { user, error in
+                if let user {
+                    print("Session restored for \(user.profile?.email ?? "unknown email")")
+                } else {
+                    print("Could not restore session: \(error?.localizedDescription ?? "unknown error")")
+                }
                 continuation.resume(returning: user.map(Self.makeUser(from:)))
             }
         }
@@ -61,10 +80,13 @@ final class GoogleAuthService: AuthenticationServiceProtocol {
 
     func signOut() async throws {
         GIDSignIn.sharedInstance.signOut()
+        print("Signed out from Google")
     }
 
     func handle(url: URL) -> Bool {
-        GIDSignIn.sharedInstance.handle(url)
+        let handled = GIDSignIn.sharedInstance.handle(url)
+        print("Received callback URL, handled by Google: \(handled)")
+        return handled
     }
 
     private static func makeUser(from user: GIDGoogleUser) -> AuthUser {

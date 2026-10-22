@@ -32,6 +32,7 @@ final class AuthViewModel: ObservableObject {
         // No saved user (first launch, after logout, or after reinstalling the app):
         // clear any old Google session left in the Keychain and show the login screen.
         guard let savedUser = sessionStore.loadUser() else {
+            print("[Auth] No saved user in UserDefaults, showing login screen")
             try? await authenticationService.signOut()
             user = nil
             isRestoring = false
@@ -39,6 +40,7 @@ final class AuthViewModel: ObservableObject {
         }
 
         // A saved user exists: open the gallery straight away, even without internet.
+        print("[Auth] Saved user found in UserDefaults: \(savedUser.email), opening gallery")
         user = savedUser
         isRestoring = false
 
@@ -60,6 +62,7 @@ final class AuthViewModel: ObservableObject {
             let signedInUser = try await authenticationService.signIn()
             user = signedInUser
             sessionStore.save(signedInUser)
+            print("[Auth] User saved in UserDefaults, opening gallery")
         } catch GoogleAuthError.cancelled {
             errorMessage = "Sign-in was cancelled."
         } catch {
@@ -75,6 +78,7 @@ final class AuthViewModel: ObservableObject {
         }
         sessionStore.clear()                 // saved user in UserDefaults
         ImageService.shared.clearAllData()   // saved photos and images
+        print("[Auth] Logged out: cleared UserDefaults and Core Data, showing login screen")
         user = nil
         errorMessage = nil
     }
